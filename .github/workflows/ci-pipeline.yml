@@ -1,0 +1,33 @@
+name: CI Pipeline
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Dependencies cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore NuGet packages
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build -c Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --no-restore --verbosity normal
