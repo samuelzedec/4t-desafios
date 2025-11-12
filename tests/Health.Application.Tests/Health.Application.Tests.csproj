@@ -15,6 +15,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Health.Application\Health.Application.csproj"/>
     <ProjectReference Include="..\..\src\Health.Domain\Health.Domain.csproj"/>
+    <ProjectReference Include="..\Health.Domain.Tests\Health.Domain.Tests.csproj"/>
   </ItemGroup>
 </Project>

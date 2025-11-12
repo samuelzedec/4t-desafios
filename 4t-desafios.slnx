@@ -1,12 +1,16 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="Directory.Build.props"/>
-    <File Path="Directory.Packages.props"/>
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Health.Domain/Health.Domain.csproj"/>
+    <Project Path="src/Health.Api/Health.Api.csproj" />
+    <Project Path="src/Health.Application/Health.Application.csproj" />
+    <Project Path="src/Health.Domain/Health.Domain.csproj" />
+    <Project Path="src/Health.Infrastructure/Health.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Health.Domain.Tests/Health.Domain.Tests.csproj"/>
+    <Project Path="tests/Health.Domain.Tests/Health.Domain.Tests.csproj" />
+    <Project Path="tests\Health.Application.Tests\Health.Application.Tests.csproj" />
   </Folder>
 </Solution>
