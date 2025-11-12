@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props"/>
+    <File Path="Directory.Packages.props"/>
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Health.Domain/Health.Domain.csproj"/>
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Health.Domain.Tests/Health.Domain.Tests.csproj"/>
+  </Folder>
+</Solution>
