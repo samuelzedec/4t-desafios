@@ -1,4 +1,5 @@
 using FluentValidation;
+using Health.Application.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Health.Application;
@@ -12,7 +13,10 @@ public static class DependencyInjection
     public static void AddApplication(this IServiceCollection services)
     {
         services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+        {
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+        });
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly,
