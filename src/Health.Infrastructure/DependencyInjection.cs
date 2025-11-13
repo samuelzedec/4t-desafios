@@ -1,5 +1,7 @@
+using Health.Domain.Repositories;
 using Health.Infrastructure.Persistence;
 using Health.Infrastructure.Persistence.Interceptors;
+using Health.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,5 +52,12 @@ public static class DependencyInjection
             .CreateLogger();
 
         loggingBuilder.AddSerilog();
+    }
+    
+    private static void AddRepositories(this IServiceCollection services)
+    {
+        services.AddTransient<IBeneficiaryRepository, BeneficiaryRepository>();
+        services.AddTransient<IHealthPlanRepository, HealthPlanRepository>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
     }
 }
