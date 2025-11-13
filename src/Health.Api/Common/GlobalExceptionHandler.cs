@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Health.Application.Abstractions.Common;
+using Health.Application.Common;
 using Health.Application.Exceptions;
 using Health.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;

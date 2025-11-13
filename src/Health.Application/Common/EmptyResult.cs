@@ -1,7 +1,7 @@
 using Health.Application.Abstractions.Commands;
 using Health.Application.Abstractions.Queries;
 
-namespace Health.Application.Abstractions.Common;
+namespace Health.Application.Common;
 
 /// <summary>
 /// Representa um resultado vazio para operações que não retornam dados específicos.

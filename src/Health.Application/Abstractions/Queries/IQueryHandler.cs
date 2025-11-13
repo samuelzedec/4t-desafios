@@ -1,4 +1,4 @@
-using Health.Application.Abstractions.Common;
+using Health.Application.Common;
 using MediatR;
 
 namespace Health.Application.Abstractions.Queries;

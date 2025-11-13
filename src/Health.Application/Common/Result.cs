@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json.Serialization;
 
-namespace Health.Application.Abstractions.Common;
+namespace Health.Application.Common;
 
 public class Result
 {
