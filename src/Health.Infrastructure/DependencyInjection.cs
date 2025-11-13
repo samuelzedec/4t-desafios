@@ -20,8 +20,8 @@ public static class DependencyInjection
         IConfiguration configuration,
         ILoggingBuilder loggingBuilder)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        var connectionString = configuration.GetConnectionString("PostgresConnection")
+            ?? throw new InvalidOperationException("Connection string 'PostgresConnection' not found.");
 
         services.AddPersistence(connectionString);
         services.AddLogger(loggingBuilder);
