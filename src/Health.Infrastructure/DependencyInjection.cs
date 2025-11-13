@@ -1,4 +1,5 @@
 using Health.Infrastructure.Persistence;
+using Health.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,7 @@ public static class DependencyInjection
             .UseNpgsql(connectionString, n => n
                 .MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
                 .MigrationsHistoryTable("__EFMigrationsHistory"))
+            .AddInterceptors(new AuditInterceptor(), new CaseInterceptor())
             .EnableDetailedErrors()
             .EnableServiceProviderCaching()
         );
