@@ -17,7 +17,7 @@ internal static class BuilderExtension
     private static void AddDependencyInjection(this WebApplicationBuilder builder)
     {
         builder.Services.AddApplication();
-        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddInfrastructure(builder.Configuration, builder.Logging);
     }
 
     private static void AddDocumentationApi(this WebApplicationBuilder builder)
