@@ -1,4 +1,4 @@
-using Health.Api.Extensions.Api;
+using Health.Api.Common;
 using Health.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

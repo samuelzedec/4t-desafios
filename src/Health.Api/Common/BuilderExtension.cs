@@ -1,13 +1,15 @@
 using Health.Application;
 using Health.Infrastructure;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 
-namespace Health.Api.Extensions.Api;
+namespace Health.Api.Common;
 
 internal static class BuilderExtension
 {
     internal static void AddApplicationServices(this WebApplicationBuilder builder)
     {
+        builder.AddConfigurations();
         builder.AddDependencyInjection();
         builder.AddDocumentationApi();
     }
@@ -32,5 +34,19 @@ internal static class BuilderExtension
                 return Task.CompletedTask;
             })
         );
+    }
+
+    private static void AddConfigurations(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        builder.Configuration.AddEnvironmentVariables();
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.AddServerHeader = false;
+            options.ConfigureEndpointDefaults(endpoint
+                => endpoint.Protocols = HttpProtocols.Http1AndHttp2AndHttp3);
+        });
     }
 }
