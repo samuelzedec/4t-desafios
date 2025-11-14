@@ -8,14 +8,11 @@ using Microsoft.AspNetCore.Diagnostics;
 
 namespace Health.Api.Common;
 
-internal sealed class GlobalExceptionHandler(
-    ILogger<GlobalExceptionHandler> logger)
-    : IExceptionHandler
+internal sealed class GlobalExceptionHandler : IExceptionHandler
 {
     private static JsonSerializerOptions JsonSerializerOptions => new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.Never
     };
 
     public async ValueTask<bool> TryHandleAsync(
@@ -23,11 +20,7 @@ internal sealed class GlobalExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "Exception occurred: {ExceptionType} - {Message}",
-            exception.GetType().Name, exception.Message);
-
         (string message, HttpStatusCode code, Dictionary<string, string[]>? details) = MapExceptionToError(exception);
-
         var jsonResponse = JsonSerializer.Serialize(
             Result.Failure<EmptyResult>(message, code, details),
             JsonSerializerOptions
