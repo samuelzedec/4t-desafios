@@ -12,10 +12,11 @@ public static class DependencyInjection
 {
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddMediatR(cfg =>
+        services.AddMediatR(config =>
         {
-            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
-            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(
