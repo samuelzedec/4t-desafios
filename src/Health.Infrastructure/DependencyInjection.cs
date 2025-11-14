@@ -27,6 +27,7 @@ public static class DependencyInjection
 
         services.AddPersistence(connectionString);
         services.AddLogger(loggingBuilder);
+        services.AddRepositories();
     }
 
     private static void AddPersistence(this IServiceCollection services, string connectionString)
@@ -46,14 +47,16 @@ public static class DependencyInjection
         const string logStructure = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
             .WriteTo.Console(outputTemplate: logStructure)
             .CreateLogger();
 
+        loggingBuilder.ClearProviders();
         loggingBuilder.AddSerilog();
     }
-    
+
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddTransient<IBeneficiaryRepository, BeneficiaryRepository>();
