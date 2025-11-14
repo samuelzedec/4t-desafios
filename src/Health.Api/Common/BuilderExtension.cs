@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Health.Application;
 using Health.Infrastructure;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -39,9 +41,16 @@ internal static class BuilderExtension
     private static void AddConfigurations(this WebApplicationBuilder builder)
     {
         builder.Services.AddProblemDetails();
+        builder.Configuration.AddEnvironmentVariables();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        builder.Configuration.AddEnvironmentVariables();
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+        });
+
         builder.WebHost.ConfigureKestrel(options =>
         {
             options.AddServerHeader = false;

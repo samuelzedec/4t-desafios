@@ -7,6 +7,7 @@ internal static class AppExtension
     internal static void UseApiServices(this WebApplication app)
     {
         app.UseDocumentation();
+        app.UseConfigurations();
     }
 
     private static void UseDocumentation(this WebApplication app)
@@ -30,5 +31,6 @@ internal static class AppExtension
 
         app.UseExceptionHandler();
         app.UseHttpsRedirection();
+        app.MapControllers();
     }
 }
