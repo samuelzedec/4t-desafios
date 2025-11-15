@@ -24,5 +24,5 @@ public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand, Result
 /// O tipo de resposta retornado após o processamento do comando. Deve implementar <see cref="ICommandResponse"/>.
 /// </typeparam>
 public interface ICommandHandler<in TCommand, TResponse> : IRequestHandler<TCommand, Result<TResponse>>
-    where TResponse : class, ICommandResponse
+    where TResponse : class
     where TCommand : ICommand<TResponse>;

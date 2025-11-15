@@ -9,8 +9,7 @@ public sealed record GetHealthPlanByIdQueryResponse(
     string AnsRegistrationCode,
     BeneficiaryMinimalDto[] Beneficiaries,
     DateTime CreationDate,
-    DateTime? ModificationDate
-) : IQueryResponse
+    DateTime? ModificationDate)
 {
     public static GetHealthPlanByIdQueryResponse FromEntity(HealthPlan healthPlan)
         => new(

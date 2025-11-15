@@ -17,5 +17,5 @@ namespace Health.Application.Abstractions.Queries;
 /// que deve implementar <see cref="IQueryResponse"/>.
 /// </typeparam>
 public interface IQueryHandler<in TQuery, TResponse> : IRequestHandler<TQuery, Result<TResponse>>
-    where TResponse : class, IQueryResponse
+    where TResponse : class
     where TQuery : IQuery<TResponse>;
