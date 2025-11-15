@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Health.Application;
 using Health.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 
@@ -57,5 +58,11 @@ internal static class BuilderExtension
             options.ConfigureEndpointDefaults(endpoint
                 => endpoint.Protocols = HttpProtocols.Http1AndHttp2AndHttp3);
         });
+
+        builder.Services
+            .Configure<ApiBehaviorOptions>(options => 
+                options.SuppressModelStateInvalidFilter = true)
+            .Configure<JsonOptions>(options =>
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
     }
 }
