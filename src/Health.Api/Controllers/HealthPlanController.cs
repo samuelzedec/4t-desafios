@@ -5,6 +5,7 @@ using Health.Application.Features.HealthPlans.Commands.CreateHealthPlanCommand;
 using Health.Application.Features.HealthPlans.Commands.DeleteHealthPlanCommand;
 using Health.Application.Features.HealthPlans.Commands.UpdateHealthPlanCommand;
 using Health.Application.Features.HealthPlans.Queries.GetHealthPlanByIdQuery;
+using Health.Application.Features.HealthPlans.Queries.GetHealthPlansQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public sealed class HealthPlanController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(command, cancellationToken);
         return result.ToHttpResponse($"api/health-plans/{result.Value?.Id}");
     }
-    
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(Result<EmptyResult>), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteHealthPlanAsync(
@@ -56,6 +57,20 @@ public sealed class HealthPlanController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetHealthPlanByIdQuery(id), cancellationToken);
+        return result.ToHttpResponse();
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(Result<KeysetPagedResult<GetHealthPlansQueryResponse>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetHealthPlansAsync(
+        [FromQuery] string? name = null,
+        [FromQuery] string? ansCode = null,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] Guid? afterKey = null,
+        CancellationToken cancellationToken = default)
+    {
+        var filter = new GetHealthPlansQueryFilter { Name = name, AnsCode = ansCode };
+        var result = await mediator.Send(new GetHealthPlansQuery(filter, pageSize, afterKey), cancellationToken);
         return result.ToHttpResponse();
     }
 }
