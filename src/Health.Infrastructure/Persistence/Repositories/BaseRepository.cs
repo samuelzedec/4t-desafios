@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Health.Domain.Abstractions;
 using Health.Domain.Entities;
 using Health.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -27,4 +28,16 @@ public abstract class BaseRepository<T>(AppDbContext context)
 
     public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         => await _table.AnyAsync(predicate, cancellationToken);
+
+    public async Task<List<T>> GetPagedAsync(
+        IFilter<T> filter, 
+        int pageSize, 
+        Guid? afterKey,
+        CancellationToken cancellationToken = default)
+    {
+        var queryable = filter.Apply(_table.AsNoTracking());
+        if(afterKey.HasValue) queryable = queryable.Where(hp => hp.Id > afterKey.Value);
+        
+        return await queryable.Take(pageSize + 1).ToListAsync(cancellationToken);
+    }
 }

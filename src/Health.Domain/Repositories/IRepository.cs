@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Health.Domain.Abstractions;
 using Health.Domain.Entities;
 
 namespace Health.Domain.Repositories;
@@ -55,4 +56,29 @@ public interface IRepository<T>
     /// Uma tarefa que representa a operação assíncrona e retorna um valor booleano indicando se existe alguma entidade que satisfaça a condição.
     /// </returns>
     Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Recupera uma lista paginada de entidades do tipo <typeparamref name="T"/> com base no filtro especificado e nas opções de paginação.
+    /// </summary>
+    /// <param name="filter">
+    /// O filtro a ser aplicado à consulta para recuperar entidades.
+    /// </param>
+    /// <param name="pageSize">
+    /// O número de itens por página.
+    /// </param>
+    /// <param name="afterKey">
+    /// Um GUID opcional indicando o ponto de partida para recuperar entidades na paginação.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Token para monitorar requisições de cancelamento.
+    /// </param>
+    /// <returns>
+    /// Uma tarefa que representa a operação assíncrona, contendo uma coleção de entidades do tipo <typeparamref name="T"/>.
+    /// </returns>
+    Task<List<T>> GetPagedAsync(
+        IFilter<T> filter,
+        int pageSize,
+        Guid? afterKey,
+        CancellationToken cancellationToken = default
+    );
 }
