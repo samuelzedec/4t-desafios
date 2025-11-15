@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Health.Domain.Entities;
 
 namespace Health.Domain.Repositories;
@@ -8,7 +9,7 @@ namespace Health.Domain.Repositories;
 /// <typeparam name="T">
 /// O tipo da entidade que este repositório gerencia. Deve herdar de <see cref="BaseEntity"/>.
 /// </typeparam>
-public interface IRepository<in T>
+public interface IRepository<T>
     where T : BaseEntity
 {
     /// <summary>
@@ -40,4 +41,18 @@ public interface IRepository<in T>
     /// A instância da entidade a ser removida.
     /// </param>
     void Delete(T entity);
+
+    /// <summary>
+    /// Verifica de forma assíncrona se existe uma entidade do tipo <typeparamref name="T"/> que satisfaz o predicado especificado.
+    /// </summary>
+    /// <param name="predicate">
+    /// Expressão utilizada para definir a condição a ser verificada.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Token para monitorar requisições de cancelamento.
+    /// </param>
+    /// <returns>
+    /// Uma tarefa que representa a operação assíncrona e retorna um valor booleano indicando se existe alguma entidade que satisfaça a condição.
+    /// </returns>
+    Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 }

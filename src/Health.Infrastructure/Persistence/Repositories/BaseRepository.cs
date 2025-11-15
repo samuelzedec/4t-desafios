@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Health.Domain.Entities;
 using Health.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,11 @@ public abstract class BaseRepository<T>(AppDbContext context)
     }
 
     public void Delete(T entity)
-        => _table.Remove(entity);
     {
         entity.DeleteEntity();
         _table.Update(entity);
     }
+
+    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _table.AnyAsync(predicate, cancellationToken);
 }
