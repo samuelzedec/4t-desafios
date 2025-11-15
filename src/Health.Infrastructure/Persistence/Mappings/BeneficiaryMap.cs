@@ -19,6 +19,7 @@ public sealed class BeneficiaryMap
             .HasColumnName("full_name")
             .HasColumnType("text")
             .HasMaxLength(Name.MaxLength)
+            .UseCollation("case_insensitive")
             .IsRequired()
         );
 

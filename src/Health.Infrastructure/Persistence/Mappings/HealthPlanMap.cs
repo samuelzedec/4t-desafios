@@ -19,6 +19,7 @@ public sealed class HealthPlanMap
             .HasColumnName("name")
             .HasColumnType("text")
             .HasMaxLength(Name.MaxLength)
+            .UseCollation("case_insensitive")
             .IsRequired()
         );
 

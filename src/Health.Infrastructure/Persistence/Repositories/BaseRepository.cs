@@ -13,8 +13,15 @@ public abstract class BaseRepository<T>(AppDbContext context)
         => await _table.AddAsync(entity, cancellationToken);
 
     public void Update(T entity)
-        => _table.Update(entity);
+    {
+        entity.UpdateEntity();
+        _table.Update(entity);
+    }
 
     public void Delete(T entity)
         => _table.Remove(entity);
+    {
+        entity.DeleteEntity();
+        _table.Update(entity);
+    }
 }

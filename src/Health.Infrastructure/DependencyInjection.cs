@@ -1,6 +1,5 @@
 using Health.Domain.Repositories;
 using Health.Infrastructure.Persistence;
-using Health.Infrastructure.Persistence.Interceptors;
 using Health.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,24 +21,35 @@ public static class DependencyInjection
         IConfiguration configuration,
         ILoggingBuilder loggingBuilder)
     {
-        var connectionString = configuration.GetConnectionString("PostgresConnection")
+        var isDevelopment = configuration["ASPNETCORE_ENVIRONMENT"] == "Development";
+        var connectionString =
+            configuration.GetConnectionString("PostgresConnection")
             ?? throw new InvalidOperationException("Connection string 'PostgresConnection' not found.");
 
-        services.AddPersistence(connectionString);
+        services.AddPersistence(connectionString, isDevelopment);
         services.AddLogger(loggingBuilder);
         services.AddRepositories();
     }
 
-    private static void AddPersistence(this IServiceCollection services, string connectionString)
+    private static void AddPersistence(
+        this IServiceCollection services,
+        string connectionString,
+        bool isDevelopment)
     {
-        services.AddDbContext<AppDbContext>(options => options
-            .UseNpgsql(connectionString, n => n
-                .MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
-                .MigrationsHistoryTable("__EFMigrationsHistory"))
-            .AddInterceptors(new AuditInterceptor(), new CaseInterceptor())
-            .EnableDetailedErrors()
-            .EnableServiceProviderCaching()
-        );
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options
+                .UseNpgsql(connectionString, n => n
+                    .MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
+                    .MigrationsHistoryTable("__EFMigrationsHistory"))
+                .EnableServiceProviderCaching();
+
+            if (isDevelopment)
+            {
+                options.EnableDetailedErrors();
+                options.EnableSensitiveDataLogging();
+            }
+        });
     }
 
     private static void AddLogger(this IServiceCollection _, ILoggingBuilder loggingBuilder)
