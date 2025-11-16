@@ -4,6 +4,7 @@ using Health.Application.Abstractions.Commands;
 using Health.Application.Common;
 using Health.Domain.Entities;
 using Health.Domain.Repositories;
+using Health.Domain.Shared;
 
 namespace Health.Application.Features.HealthPlans.Commands.UpdateHealthPlanCommand;
 
@@ -83,7 +84,7 @@ internal sealed class UpdateHealthPlanCommandHandler(
         string errorMessage,
         CancellationToken cancellationToken)
     {
-        if (ShouldSkipUpdate(currentValue, newValue))
+        if (UpdateHelper.ShouldSkipUpdate(currentValue, newValue))
             return Result.Success<UpdateHealthPlanCommandResponse>();
 
         if (await unitOfWork.HealthPlans.ExistsAsync(conflictExpression, cancellationToken))
@@ -92,18 +93,4 @@ internal sealed class UpdateHealthPlanCommandHandler(
         updateAction(newValue);
         return Result.Success<UpdateHealthPlanCommandResponse>();
     }
-
-    /// <summary>
-    /// Determina se uma operação de atualização deve ser ignorada
-    /// com base na comparação do valor atual e do novo valor.
-    /// </summary>
-    /// <param name="currentValue">O valor existente da propriedade.</param>
-    /// <param name="newValue">O novo valor a ser avaliado.</param>
-    /// <returns>
-    /// Um booleano indicando se a atualização deve ser ignorada.
-    /// Retorna verdadeiro se o novo valor for nulo, vazio ou equivalente
-    /// ao valor atual (sem distinção entre maiúsculas e minúsculas); caso contrário, falso.
-    /// </returns>
-    private static bool ShouldSkipUpdate(string currentValue, string? newValue) =>
-        string.IsNullOrWhiteSpace(newValue) || currentValue.Equals(newValue, StringComparison.OrdinalIgnoreCase);
 }

@@ -52,7 +52,7 @@ public sealed class Beneficiary : BaseEntity
     public void UpdateStatus(Status status)
         => Status = status;
 
-    public void UpdateHealthPlanId(Guid healthPlanId)
+    public void UpdateHealthPlan(Guid healthPlanId)
         => HealthPlanId = healthPlanId;
 
     public void UpdateFullName(string fullName)

@@ -91,7 +91,7 @@ public sealed class BeneficiaryTests : BaseTest
         Guid newHealthPlanId = Guid.NewGuid();
 
         // Act
-        result.UpdateHealthPlanId(newHealthPlanId);
+        result.UpdateHealthPlan(newHealthPlanId);
 
         // Assert
         result.HealthPlanId.Should().Be(newHealthPlanId);
