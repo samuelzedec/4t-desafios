@@ -1,4 +1,3 @@
-using Health.Application.Abstractions.Queries;
 using Health.Application.DTOs;
 using Health.Domain.Entities;
 
