@@ -26,18 +26,25 @@ public abstract class BaseRepository<T>(AppDbContext context)
         _table.Update(entity);
     }
 
-    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken = default)
         => await _table.AnyAsync(predicate, cancellationToken);
 
     public async Task<List<T>> GetPagedAsync(
-        IFilter<T> filter, 
-        int pageSize, 
+        IFilter<T> filter,
+        int pageSize,
         Guid? afterKey,
         CancellationToken cancellationToken = default)
     {
-        var queryable = filter.Apply(_table.AsNoTracking());
-        if(afterKey.HasValue) queryable = queryable.Where(hp => hp.Id > afterKey.Value);
-        
+        var query = _table
+            .AsNoTracking()
+            .OrderBy(b => b.Id);
+
+        var queryable = filter.Apply(query);
+
+        if (afterKey.HasValue)
+            queryable = queryable.Where(hp => hp.Id > afterKey.Value);
+
         return await queryable.Take(pageSize + 1).ToListAsync(cancellationToken);
     }
 }
