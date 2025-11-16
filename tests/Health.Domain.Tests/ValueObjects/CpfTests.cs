@@ -37,15 +37,30 @@ public sealed class CpfTests : BaseTest
         result.Should().ThrowExactly<EmptyCpfException>().WithMessage("O CPF não pode estar vazio.");
     }
 
-    [Theory(DisplayName = "Deve lançar InvalidCpfLengthException quando CPF não o tamanho correto")]
+    [Theory(DisplayName = "Deve lançar InvalidCpfException quando o CPF contiver caracteres não numéricos após sanitização")]
+    [InlineData("abc12345678")]
+    [InlineData("123@456#789")]
+    [InlineData("12345678abc")]
+    public void Create_WhenCpfContainsNonNumericCharactersAfterSanitization_ShouldThrowInvalidCpfException(string value)
+    {
+        // Arrange & Act
+        var result = () => Cpf.Create(value);
+
+        // Assert
+        result.Should().Throw<DomainException>();
+        result.Should().ThrowExactly<InvalidCpfException>()
+            .WithMessage($"O CPF deve conter somente {Cpf.Length} números.");
+    }
+
+    [Theory(DisplayName = "Deve lançar InvalidCpfLengthException quando o CPF tiver tamanho inválido")]
     [InlineData("123456")]
     [InlineData("1234567")]
     [InlineData("12345678")]
     [InlineData("1234567890232132")]
-    public void Create_WhenCpfLengthIsInvalid_ShouldThrowInvalidCpfLengthException(string value)
+    public void IsValid_WhenCpfLengthIsInvalid_ShouldThrowInvalidCpfLengthException(string value)
     {
         // Arrange & Act
-        var result = () => Cpf.Create(value);
+        var result = () => Cpf.IsValid(value);
 
         // Assert
         result.Should().Throw<DomainException>();

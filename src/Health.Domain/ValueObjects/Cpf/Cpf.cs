@@ -1,12 +1,14 @@
+using System.Text.RegularExpressions;
 using Health.Domain.ValueObjects.Cpf.Exceptions;
 
 namespace Health.Domain.ValueObjects.Cpf;
 
-public sealed record Cpf : ValueObject
+public sealed partial record Cpf : ValueObject
 {
     #region Constants
 
-    public const int CpfLength = 11;
+    public const string RegexPattern = @"^\d{11}$";
+    public const int Length = 11;
 
     #endregion
 
@@ -23,6 +25,13 @@ public sealed record Cpf : ValueObject
 
     #endregion
 
+    #region Source Generator
+
+    [GeneratedRegex(RegexPattern)]
+    public static partial Regex ValidateCpf();
+
+    #endregion
+
     #region Factory Methods
 
     public static Cpf Create(string value)
@@ -31,6 +40,9 @@ public sealed record Cpf : ValueObject
             throw new EmptyCpfException("O CPF não pode estar vazio.");
 
         var sanitizedValue = Sanitize(value);
+
+        if (!ValidateCpf().IsMatch(sanitizedValue))
+            throw new InvalidCpfException($"O CPF deve conter somente {Length} números.");
 
         IsValid(sanitizedValue);
         return new Cpf(sanitizedValue);
@@ -52,7 +64,7 @@ public sealed record Cpf : ValueObject
     /// </exception>
     public static void IsValid(string cpf)
     {
-        if (cpf.Length != CpfLength)
+        if (cpf.Length != Length)
             throw new InvalidCpfLengthException("O CPF deve conter 11 caracteres.");
 
         if (cpf.Distinct().Count() == 1)
@@ -95,7 +107,7 @@ public sealed record Cpf : ValueObject
         => cpf.ToString();
 
     #endregion
-    
+
     #region Overrides
 
     public override string ToString()

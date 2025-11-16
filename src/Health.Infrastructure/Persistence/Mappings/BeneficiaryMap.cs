@@ -29,7 +29,7 @@ public sealed class BeneficiaryMap
                 .Property(c => c.Value)
                 .HasColumnName("cpf")
                 .HasColumnType("text")
-                .HasMaxLength(Cpf.CpfLength)
+                .HasMaxLength(Cpf.Length)
                 .IsRequired();
 
             navigationBuilder
