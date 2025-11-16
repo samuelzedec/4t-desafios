@@ -14,7 +14,7 @@ public sealed class HealthPlan : BaseEntity
 
     #region Navigation Properties
 
-    public IReadOnlyCollection<Beneficiary> Beneficiaries { get; private set; } = [];
+    public ICollection<Beneficiary> Beneficiaries { get; private set; } = [];
 
     #endregion
 
