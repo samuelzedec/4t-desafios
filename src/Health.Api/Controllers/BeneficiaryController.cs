@@ -4,6 +4,7 @@ using Health.Application.Common;
 using Health.Application.Features.Beneficiaries.Commands.CreateBeneficiaryCommand;
 using Health.Application.Features.Beneficiaries.Commands.DeleteBeneficiaryCommand;
 using Health.Application.Features.Beneficiaries.Commands.UpdateBeneficiaryCommand;
+using Health.Application.Features.Beneficiaries.Queries.GetBeneficiaryByIdQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,16 @@ public sealed class BeneficiaryController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteBeneficiaryCommand(id), cancellationToken);
+        return result.ToHttpResponse();
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(Result<GetBeneficiaryByIdQueryResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBeneficiaryByIdAsync(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetBeneficiaryByIdQuery(id), cancellationToken);
         return result.ToHttpResponse();
     }
 }

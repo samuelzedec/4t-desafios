@@ -11,4 +11,10 @@ public sealed class BeneficiaryRepository(AppDbContext context)
         => await _table
             .AsNoTracking()
             .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
+
+    public async Task<Beneficiary?> GetByIdWithHealthPlanAsync(Guid id, CancellationToken cancellationToken = default)
+        => await _table
+            .AsNoTracking()
+            .Include(b => b.HealthPlan)
+            .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
 }
