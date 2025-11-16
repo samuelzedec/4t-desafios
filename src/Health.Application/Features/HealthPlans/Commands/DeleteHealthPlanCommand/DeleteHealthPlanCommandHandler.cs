@@ -19,6 +19,9 @@ internal sealed class DeleteHealthPlanCommandHandler(
         if (healthPlan is null)
             return Result.Failure("Plano de saúde não encontrado.", HttpStatusCode.NotFound);
 
+        if (healthPlan.Beneficiaries.Count > 0)
+            return Result.Failure("O plano de saúde não pode ser excluído pois possui beneficiários vinculados.");
+
         unitOfWork.HealthPlans.Delete(healthPlan);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

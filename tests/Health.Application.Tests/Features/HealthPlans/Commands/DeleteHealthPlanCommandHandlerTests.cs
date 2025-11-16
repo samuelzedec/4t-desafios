@@ -1,4 +1,5 @@
 using System.Net;
+using Bogus.Extensions.Brazil;
 using FluentAssertions;
 using Health.Application.Features.HealthPlans.Commands.DeleteHealthPlanCommand;
 using Health.Domain.Entities;
@@ -79,6 +80,47 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         result.IsSuccess.Should().BeFalse();
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         result.Error.Message.Should().Be("Plano de saúde não encontrado.");
+
+        _healthPlanRepositoryMock
+            .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+
+        _healthPlanRepositoryMock
+            .Verify(h => h.Delete(It.IsAny<HealthPlan>()), Times.Never);
+
+        _unitOfWorkMock
+            .Verify(h => h.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact(DisplayName = "Deve retornar falha quando o plano de saúde possuir beneficiários vinculados")]
+    public async Task DeleteHealthPlan_WhenHasBeneficiaries_ShouldReturnFailure()
+    {
+        // Arrange
+        var healthPlan = CreateFaker();
+        var beneficiary = CreateFaker<Beneficiary>()
+            .CustomInstantiator(f => Beneficiary.Create(
+                f.Person.FullName,
+                f.Person.Cpf(false),
+                DateOnly.FromDateTime(f.Person.DateOfBirth.Date),
+                healthPlan.Id
+            ))
+            .Generate();
+
+        var beneficiariesProperty = typeof(HealthPlan).GetProperty("Beneficiaries");
+        var beneficiaries = (ICollection<Beneficiary>)beneficiariesProperty!.GetValue(healthPlan)!;
+        beneficiaries.Add(beneficiary);
+
+        _healthPlanRepositoryMock
+            .Setup(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(healthPlan);
+
+        // Act
+        var result = await _handlerTests.Handle(new DeleteHealthPlanCommand(healthPlan.Id), _cancellationToken.Token);
+
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        result.Error.Message.Should()
+            .Be("O plano de saúde não pode ser excluído pois possui beneficiários vinculados.");
 
         _healthPlanRepositoryMock
             .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
