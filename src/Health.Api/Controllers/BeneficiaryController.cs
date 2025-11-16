@@ -4,7 +4,9 @@ using Health.Application.Common;
 using Health.Application.Features.Beneficiaries.Commands.CreateBeneficiaryCommand;
 using Health.Application.Features.Beneficiaries.Commands.DeleteBeneficiaryCommand;
 using Health.Application.Features.Beneficiaries.Commands.UpdateBeneficiaryCommand;
+using Health.Application.Features.Beneficiaries.Queries.GetBeneficiaresQuery;
 using Health.Application.Features.Beneficiaries.Queries.GetBeneficiaryByIdQuery;
+using Health.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +58,30 @@ public sealed class BeneficiaryController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetBeneficiaryByIdQuery(id), cancellationToken);
+        return result.ToHttpResponse();
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(Result<KeysetPagedResult<GetBeneficiaresQueryResponse>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetHealthPlansAsync(
+        [FromQuery] string? fullName = null,
+        [FromQuery] string? cpf = null,
+        [FromQuery] Status? status = null,
+        [FromQuery] Guid? healthPlanId = null,
+        [FromQuery] DateOnly? birthDate = null,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] Guid? afterKey = null,
+        CancellationToken cancellationToken = default)
+    {
+        var filter = new GetBeneficiaresQueryFilter
+        {
+            FullName = fullName,
+            Cpf = cpf,
+            Status = status,
+            HealthPlanId = healthPlanId,
+            BirthDate = birthDate
+        };
+        var result = await mediator.Send(new GetBeneficiaresQuery(filter, pageSize, afterKey), cancellationToken);
         return result.ToHttpResponse();
     }
 }
