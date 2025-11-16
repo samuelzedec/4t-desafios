@@ -7,7 +7,7 @@ using Health.Domain.Repositories;
 
 namespace Health.Application.Features.HealthPlans.Commands.UpdateHealthPlanCommand;
 
-public sealed class UpdateHealthPlanCommandHandler(
+internal sealed class UpdateHealthPlanCommandHandler(
     IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateHealthPlanCommand, UpdateHealthPlanCommandResponse>
 {

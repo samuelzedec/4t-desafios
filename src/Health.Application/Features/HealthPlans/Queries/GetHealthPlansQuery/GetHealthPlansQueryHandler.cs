@@ -4,7 +4,7 @@ using Health.Domain.Repositories;
 
 namespace Health.Application.Features.HealthPlans.Queries.GetHealthPlansQuery;
 
-public sealed class GetHealthPlansQueryHandler(
+internal sealed class GetHealthPlansQueryHandler(
     IUnitOfWork unitOfWork)
     : IQueryHandler<GetHealthPlansQuery, KeysetPagedResult<GetHealthPlansQueryResponse>>
 {

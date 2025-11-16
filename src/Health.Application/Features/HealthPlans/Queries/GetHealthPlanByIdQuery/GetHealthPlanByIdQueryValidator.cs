@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Health.Application.Features.HealthPlans.Queries.GetHealthPlanByIdQuery;
 
-public sealed class GetHealthPlanByIdQueryValidator 
+internal sealed class GetHealthPlanByIdQueryValidator 
     : AbstractValidator<GetHealthPlanByIdQuery>
 {
     public GetHealthPlanByIdQueryValidator()
