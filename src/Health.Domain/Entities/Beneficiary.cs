@@ -42,8 +42,8 @@ public sealed class Beneficiary : BaseEntity
 
     #region Factories Methods
 
-    public static Beneficiary Create(string fullName, string cpf, DateOnly birthDate, Guid flatId)
-        => new(Name.Create(fullName), Cpf.Create(cpf), BirthDate.Create(birthDate), flatId);
+    public static Beneficiary Create(string fullName, string cpf, DateOnly birthDate, Guid healthPlanId)
+        => new(Name.Create(fullName), Cpf.Create(cpf), BirthDate.Create(birthDate), healthPlanId);
 
     #endregion
 
@@ -52,7 +52,7 @@ public sealed class Beneficiary : BaseEntity
     public void UpdateStatus(Status status)
         => Status = status;
 
-    public void UpdateFlatId(Guid healthPlanId)
+    public void UpdateHealthPlanId(Guid healthPlanId)
         => HealthPlanId = healthPlanId;
 
     public void UpdateFullName(string fullName)
