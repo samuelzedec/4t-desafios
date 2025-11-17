@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 
 namespace Health.Api.Common;
@@ -12,8 +14,7 @@ internal static class AppExtension
 
     private static void UseDocumentation(this WebApplication app)
     {
-        if (!app.Environment.IsDevelopment()) return;
-
+        // if (!app.Environment.IsDevelopment()) return;
         app.MapOpenApi();
         app.MapScalarApiReference();
     }
@@ -28,6 +29,9 @@ internal static class AppExtension
             context.Response.Headers.Append("X-Frame-Options", "DENY");
             await next();
         });
+
+        app.MapHealthChecks("/",
+            new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse });
 
         app.UseExceptionHandler();
         app.UseHttpsRedirection();

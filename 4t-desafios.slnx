@@ -2,7 +2,10 @@
   <Folder Name="/Solution Items/">
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
-    <File Path="backend-jr.md"/>
+    <File Path="backend-jr.md" />
+    <File Path="docker-compose.yaml" />
+    <File Path="Dockerfile" />
+    <File Path=".dockerignore"/>
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Health.Api/Health.Api.csproj" />

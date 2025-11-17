@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddPersistence(connectionString, isDevelopment);
         services.AddLogger(loggingBuilder);
         services.AddRepositories();
+        services.AddHealthCheck(connectionString);
     }
 
     private static void AddPersistence(
@@ -72,5 +73,12 @@ public static class DependencyInjection
         services.AddTransient<IBeneficiaryRepository, BeneficiaryRepository>();
         services.AddTransient<IHealthPlanRepository, HealthPlanRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
+    }
+
+    private static void AddHealthCheck(this IServiceCollection services, string connectionString)
+    {
+        services
+            .AddHealthChecks()
+            .AddNpgSql(connectionString, name: nameof(AppDbContext));
     }
 }
