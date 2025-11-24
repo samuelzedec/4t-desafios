@@ -14,7 +14,7 @@ internal sealed class DeleteHealthPlanCommandHandler(
         CancellationToken cancellationToken)
     {
         var healthPlan = await unitOfWork.HealthPlans
-            .GetByIdAsync(request.HealthPlanId, cancellationToken);
+            .GetByIdWithBeneficiariesAsync(request.HealthPlanId, cancellationToken);
 
         if (healthPlan is null)
             return Result.Failure("Plano de saúde não encontrado.", HttpStatusCode.NotFound);

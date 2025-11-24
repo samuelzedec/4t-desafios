@@ -35,7 +35,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         var healthPlan = CreateFaker();
 
         _healthPlanRepositoryMock
-            .Setup(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(healthPlan);
 
         _healthPlanRepositoryMock
@@ -55,7 +55,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         healthPlan.DeletedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
 
         _healthPlanRepositoryMock
-            .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+            .Verify(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
         _healthPlanRepositoryMock
             .Verify(h => h.Delete(It.IsAny<HealthPlan>()), Times.Once);
@@ -69,7 +69,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
     {
         // Arrange
         _healthPlanRepositoryMock
-            .Setup(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(null as HealthPlan);
 
         // Act
@@ -82,7 +82,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         result.Error.Message.Should().Be("Plano de saúde não encontrado.");
 
         _healthPlanRepositoryMock
-            .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+            .Verify(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
         _healthPlanRepositoryMock
             .Verify(h => h.Delete(It.IsAny<HealthPlan>()), Times.Never);
@@ -110,7 +110,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         beneficiaries.Add(beneficiary);
 
         _healthPlanRepositoryMock
-            .Setup(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(healthPlan);
 
         // Act
@@ -123,7 +123,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
             .Be("O plano de saúde não pode ser excluído pois possui beneficiários vinculados.");
 
         _healthPlanRepositoryMock
-            .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+            .Verify(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
         _healthPlanRepositoryMock
             .Verify(h => h.Delete(It.IsAny<HealthPlan>()), Times.Never);
@@ -137,7 +137,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
     {
         // Arrange
         _healthPlanRepositoryMock
-            .Setup(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new OperationCanceledException());
 
         // Act
@@ -148,7 +148,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         await result.Should().ThrowAsync<OperationCanceledException>();
 
         _healthPlanRepositoryMock
-            .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+            .Verify(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
         _healthPlanRepositoryMock
             .Verify(h => h.Delete(It.IsAny<HealthPlan>()), Times.Never);
@@ -164,7 +164,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         var healthPlan = CreateFaker();
 
         _healthPlanRepositoryMock
-            .Setup(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(healthPlan);
 
         _healthPlanRepositoryMock
@@ -185,7 +185,7 @@ public sealed class DeleteHealthPlanCommandHandlerTests : BaseTest
         healthPlan.DeletedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
 
         _healthPlanRepositoryMock
-            .Verify(h => h.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+            .Verify(h => h.GetByIdWithBeneficiariesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
         _healthPlanRepositoryMock
             .Verify(h => h.Delete(It.IsAny<HealthPlan>()), Times.Once);
